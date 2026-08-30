@@ -1,0 +1,18 @@
+{
+  "name": "自媒体竞品监控总览",
+  "blocks": [
+    {"name": "监控系统说明", "type": "text", "data_config": {"text": "# TikHub 自媒体竞品监控\nSkill 负责调度，确定性代码负责抓取、去重、快照和告警。"}},
+    {"name": "监控账号数", "type": "statistics", "data_config": {"table_name": "账号库", "count_all": true}},
+    {"name": "内容总量", "type": "statistics", "data_config": {"table_name": "内容库", "count_all": true}},
+    {"name": "近60天内容", "type": "statistics", "data_config": {"table_name": "内容库", "count_all": true, "filter": {"conjunction": "and", "conditions": [{"field_name": "近60天", "operator": "is", "value": true}]}}},
+    {"name": "平台内容分布", "type": "pie", "data_config": {"table_name": "内容库", "count_all": true, "group_by": [{"field_name": "平台", "mode": "integrated"}]}},
+    {"name": "账号内容数量", "type": "column", "data_config": {"table_name": "内容库", "count_all": true, "group_by": [{"field_name": "账号昵称", "mode": "integrated", "sort": {"type": "value", "order": "desc"}}]}},
+    {"name": "账号互动表现", "type": "combo", "data_config": {"table_name": "内容库", "series": [{"field_name": "点赞数", "rollup": "SUM"}, {"field_name": "收藏数", "rollup": "SUM"}, {"field_name": "评论数", "rollup": "SUM"}], "group_by": [{"field_name": "账号昵称", "mode": "integrated", "sort": {"type": "value", "order": "desc"}}]}},
+    {"name": "内容发布趋势", "type": "line", "data_config": {"table_name": "内容库", "count_all": true, "group_by": [{"field_name": "发布时间", "mode": "integrated", "sort": {"type": "group", "order": "asc"}}]}},
+    {"name": "互动增量趋势", "type": "line", "data_config": {"table_name": "指标快照", "series": [{"field_name": "点赞增量", "rollup": "SUM"}, {"field_name": "收藏增量", "rollup": "SUM"}, {"field_name": "评论增量", "rollup": "SUM"}], "group_by": [{"field_name": "时间桶", "mode": "integrated", "sort": {"type": "group", "order": "asc"}}]}},
+    {"name": "爆款等级分布", "type": "ring", "data_config": {"table_name": "内容库", "count_all": true, "group_by": [{"field_name": "爆款等级", "mode": "integrated"}]}},
+    {"name": "TikHub 预留费用", "type": "statistics", "data_config": {"table_name": "运行日志", "series": [{"field_name": "TikHub费用USD", "rollup": "SUM"}]}},
+    {"name": "任务运行状态", "type": "pie", "data_config": {"table_name": "运行日志", "count_all": true, "group_by": [{"field_name": "状态", "mode": "integrated"}]}}
+  ]
+}
+

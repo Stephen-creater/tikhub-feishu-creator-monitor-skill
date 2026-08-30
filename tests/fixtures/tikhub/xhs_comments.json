@@ -1,0 +1,22 @@
+{
+  "code": 200,
+  "request_id": "req-xhs-comments",
+  "data": {
+    "data": {
+      "comments": [
+        {
+          "id": "comment-xhs-1",
+          "noteId": "697c0eee000000000a03c308",
+          "content": "求一个完整教程",
+          "createTime": 1788061000000,
+          "likeCount": "26",
+          "subCommentCount": "3",
+          "userInfo": {"userId": "viewer-xhs-1"}
+        }
+      ],
+      "cursor": "next-comment-cursor",
+      "hasMore": false
+    }
+  }
+}
+

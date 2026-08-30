@@ -1,0 +1,29 @@
+{
+  "code": 200,
+  "request_id": "req-douyin-posts",
+  "data": {
+    "aweme_list": [
+      {
+        "aweme_id": "7500000000000000001",
+        "desc": "第一条公开视频 #演示",
+        "create_time": 1788060000,
+        "author": {"sec_uid": "MS4wLjAB-DEMO"},
+        "statistics": {
+          "play_count": 10000,
+          "digg_count": 1200,
+          "comment_count": 45,
+          "share_count": 23,
+          "collect_count": 310
+        },
+        "video": {
+          "duration": 18500,
+          "cover": {"url_list": ["https://example.com/douyin-cover.jpg"]},
+          "play_addr": {"url_list": ["https://example.com/douyin-video.mp4"]}
+        }
+      }
+    ],
+    "max_cursor": 1788060000000,
+    "has_more": 1
+  }
+}
+

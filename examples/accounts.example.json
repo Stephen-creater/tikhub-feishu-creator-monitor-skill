@@ -1,0 +1,15 @@
+{
+  "accounts": [
+    {
+      "platform": "douyin",
+      "account_id": "replace-with-sec_user_id",
+      "enabled": true
+    },
+    {
+      "platform": "xiaohongshu",
+      "account_id": "replace-with-user_id",
+      "enabled": true
+    }
+  ]
+}
+

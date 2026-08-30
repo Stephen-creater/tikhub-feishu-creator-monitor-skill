@@ -1,0 +1,8 @@
+interface:
+  display_name: "Creator Monitor"
+  short_description: "TikHub 与飞书多维表格的竞品账号监控 Skill"
+  brand_color: "#3370FF"
+  default_prompt: "使用 $creator-monitor 检查并运行抖音和小红书竞品账号监控。"
+policy:
+  allow_implicit_invocation: true
+

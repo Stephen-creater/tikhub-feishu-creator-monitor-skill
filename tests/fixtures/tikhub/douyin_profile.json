@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "request_id": "req-douyin-profile",
+  "data": {
+    "user": {
+      "uid": "10001",
+      "sec_uid": "MS4wLjAB-DEMO",
+      "unique_id": "demo_creator",
+      "nickname": "抖音演示账号",
+      "signature": "公开演示简介",
+      "follower_count": 12000,
+      "following_count": 88,
+      "aweme_count": 42,
+      "total_favorited": 350000,
+      "avatar_larger": {"url_list": ["https://example.com/douyin-avatar.jpg"]}
+    }
+  }
+}
+
