@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from creator_monitor.feishu.bootstrap import BootstrapPlan
+from creator_monitor.feishu.bootstrap import BootstrapPlan, _named_id_map
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -57,3 +57,11 @@ def test_remaining_tables_and_views_use_returned_base_token() -> None:
     assert all("bas_demo" in command for command in table_commands + view_commands)
     assert all("--dry-run" in command for command in table_commands + view_commands)
 
+
+def test_named_id_map_accepts_current_lark_cli_list_shape() -> None:
+    payload = {
+        "ok": True,
+        "data": {"tables": [{"id": "tbl123", "name": "内容库", "records_count": 0}]},
+    }
+
+    assert _named_id_map(payload, collection="tables") == {"内容库": "tbl123"}

@@ -149,32 +149,77 @@ def execute_bootstrap(
     *,
     manifest_path: Path,
     cli: LarkCLI | None = None,
+    existing_base_token: str | None = None,
 ) -> dict[str, object]:
     if manifest_path.exists():
         return json.loads(manifest_path.read_text(encoding="utf-8"))
 
     runner = cli or LarkCLI()
-    base_result = runner.run(plan.base_create_command())
-    base_token = _find_first(base_result, ("base_token", "app_token"))
-    if not base_token:
-        raise ValueError("lark-cli base creation returned no base_token")
+    if existing_base_token:
+        base_token = existing_base_token
+        base_result: dict[str, object] = {}
+    else:
+        base_result = runner.run(plan.base_create_command())
+        base_token = _find_first(base_result, ("base_token", "app_token"))
+        if not base_token:
+            raise ValueError("lark-cli base creation returned no base_token")
 
-    table_ids: dict[str, str] = {}
-    initial_table_id = _find_first(base_result, ("table_id",))
-    if initial_table_id:
-        table_ids[plan.tables[0].name] = initial_table_id
+    table_list_result = runner.run(
+        [
+            "lark-cli",
+            "base",
+            "+table-list",
+            "--base-token",
+            base_token,
+            "--as",
+            "user",
+        ]
+    )
+    table_ids = _named_id_map(table_list_result, collection="tables")
+    if not table_ids:
+        initial_table_id = _find_first(base_result, ("table_id", "id"))
+        if initial_table_id:
+            table_ids[plan.tables[0].name] = initial_table_id
 
-    for table, command in zip(plan.tables[1:], plan.table_create_commands(base_token), strict=True):
+    table_commands = dict(
+        zip(
+            (table.name for table in plan.tables[1:]),
+            plan.table_create_commands(base_token),
+            strict=True,
+        )
+    )
+    for table in plan.tables:
+        if table.name in table_ids:
+            continue
+        command = table_commands.get(table.name)
+        if command is None:
+            raise ValueError(f"initial table {table.name} was not returned by lark-cli")
         result = runner.run(command)
-        table_id = _find_first(result, ("table_id",))
+        table_id = _find_first(result, ("table_id", "id"))
         if not table_id:
-            raise ValueError(f"lark-cli returned no table_id for {table.name}")
+            raise ValueError(f"lark-cli returned no table id for {table.name}")
         table_ids[table.name] = table_id
 
-    view_ids: dict[str, str] = {}
+    view_list_result = runner.run(
+        [
+            "lark-cli",
+            "base",
+            "+view-list",
+            "--base-token",
+            base_token,
+            "--table-id",
+            table_ids[plan.view_table],
+            "--as",
+            "user",
+        ]
+    )
+    view_ids = _named_id_map(view_list_result, collection="views")
     for view, command in zip(plan.views, plan.view_create_commands(base_token), strict=True):
+        if view.name in view_ids:
+            continue
+        command[command.index("--table-id") + 1] = table_ids[plan.view_table]
         result = runner.run(command)
-        view_id = _find_first(result, ("view_id",))
+        view_id = _find_first(result, ("view_id", "id"))
         if view_id:
             view_ids[view.name] = view_id
 
@@ -187,3 +232,21 @@ def execute_bootstrap(
     }
     _write_manifest(manifest_path, manifest)
     return manifest
+
+
+def _named_id_map(payload: dict[str, object], *, collection: str) -> dict[str, str]:
+    data = payload.get("data")
+    if not isinstance(data, dict):
+        return {}
+    items = data.get(collection)
+    if not isinstance(items, list):
+        return {}
+    result: dict[str, str] = {}
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        name = item.get("name")
+        identifier = item.get("id") or item.get(f"{collection[:-1]}_id")
+        if isinstance(name, str) and isinstance(identifier, str):
+            result[name] = identifier
+    return result
