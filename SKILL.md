@@ -19,17 +19,14 @@ scripts/creator-monitor <command> [options]
 
 进入实际操作前先运行 `scripts/creator-monitor doctor`。需要创建或检查飞书结构时读取 [数据契约](references/data-contract.md)；需要定时运行、恢复失败或控制额度时读取 [运行手册](references/operations.md)。
 
-## 命令路由
+## 公共命令
 
-- `bootstrap`：创建或校验飞书 Base、字段、视图和仪表盘。
-- `account-sync`：解析账号并刷新账号画像。
-- `content-sync`：抓取最新作品，按稳定业务键新增或更新。
-- `media-archive`：把会过期的头像、封面和媒体转存为飞书附件。
-- `metrics-refresh`：写入指标快照、计算增量并生成候选榜单。
-- `content-analyze`：采样评论、获取文案、生成拆解文档并回填。
+- `bootstrap`：创建或复用飞书 Base Schema；先使用 `--dry-run`。
 - `scheduled-sync`：供 Codex 定时任务调用的完整同步入口。
 - `daily-report`：生成并发送每日爆款战报。
 - `doctor`：检查配置、凭据、接口、飞书 Schema 和消费预算。
+
+`scheduled-sync` 内部依次执行账号入库、内容入库、指标快照和可选评论采样。附件转存与拆解建档属于需要明确内容目标的高成本能力：先读取目标记录，再使用飞书附件、妙记和文档工具完成，不要将目标内容或媒体范围交给模型猜测。
 
 ## 不变量
 
@@ -45,4 +42,3 @@ scripts/creator-monitor <command> [options]
 ## 完成证据
 
 不能只凭命令退出码宣布成功。至少读回并核对：运行日志、账号和内容记录数、第二次运行的重复数、快照增量、失败队列、拆解文档链接、战报发送结果和仪表盘组件。
-
