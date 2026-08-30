@@ -12,3 +12,4 @@ def test_cli_exposes_operational_commands() -> None:
     assert "doctor" in result.stdout
     assert "bootstrap" in result.stdout
     assert "scheduled-sync" in result.stdout
+    assert "daily-report" in result.stdout

@@ -9,6 +9,7 @@ import typer
 from creator_monitor.config import Settings
 from creator_monitor.feishu.bootstrap import BootstrapPlan, execute_bootstrap
 from creator_monitor.services.sync import run_scheduled_sync
+from creator_monitor.services.report import send_daily_report
 
 
 app = typer.Typer(help="TikHub × Feishu creator monitoring Skill runtime")
@@ -79,6 +80,13 @@ def scheduled_sync(
     typer.echo(json.dumps(result, ensure_ascii=False))
     if not result["ok"]:
         raise typer.Exit(code=2)
+
+
+@app.command("daily-report")
+def daily_report() -> None:
+    """Send the latest interactive report card via the configured Feishu bot."""
+    result = send_daily_report(settings=Settings.from_env())
+    typer.echo(json.dumps(result, ensure_ascii=False))
 
 
 if __name__ == "__main__":

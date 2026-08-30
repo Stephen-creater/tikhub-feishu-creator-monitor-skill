@@ -43,6 +43,7 @@
         {"type": "attachment", "name": "封面"},
         {"type": "text", "name": "封面原始链接", "style": {"type": "url"}},
         {"type": "text", "name": "媒体原始链接", "style": {"type": "url"}},
+        {"type": "attachment", "name": "媒体附件"},
         {"type": "datetime", "name": "发布时间", "style": {"format": "yyyy-MM-dd HH:mm"}},
         {"type": "number", "name": "时长秒", "style": {"type": "plain", "precision": 1}},
         {"type": "number", "name": "播放数", "style": {"type": "plain", "precision": 0, "thousands_separator": true}},
@@ -159,4 +160,3 @@
     }
   ]
 }
-

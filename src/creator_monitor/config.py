@@ -28,6 +28,8 @@ class Settings(BaseModel):
     max_usd: Decimal = Field(default=Decimal("0.50"), gt=0)
     max_requests_per_run: int = Field(default=20, ge=1, le=1000)
     keychain_service: str = "creator-monitor-tikhub"
+    report_user_id: str | None = None
+    analysis_url: str | None = None
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "Settings":
@@ -57,6 +59,8 @@ class Settings(BaseModel):
                     source.get("CREATOR_MONITOR_MAX_REQUESTS_PER_RUN", "20")
                 ),
                 keychain_service=keychain_service,
+                report_user_id=source.get("CREATOR_MONITOR_REPORT_USER_ID") or None,
+                analysis_url=source.get("CREATOR_MONITOR_ANALYSIS_URL") or None,
             )
         except (ValidationError, ValueError) as exc:
             raise ConfigurationError("creator monitor configuration is invalid") from exc
@@ -82,6 +86,8 @@ class Settings(BaseModel):
             "max_usd": str(self.max_usd),
             "max_requests_per_run": self.max_requests_per_run,
             "keychain_service": self.keychain_service,
+            "report_user_id": "configured" if self.report_user_id else "missing",
+            "analysis_url": "configured" if self.analysis_url else "missing",
         }
 
 

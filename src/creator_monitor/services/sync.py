@@ -247,7 +247,7 @@ def run_scheduled_sync(
         hash_field="运行ID",
         records=[PendingRecord(run_id, run_id, run_fields)],
     )
-    return {
+    summary = {
         "ok": not failures,
         "run_id": run_id,
         "status": status,
@@ -261,3 +261,20 @@ def run_scheduled_sync(
         "tikhub_requests": run_budget["requests"],
         "tikhub_reserved_usd": run_budget["usd"],
     }
+    settings.state_dir.mkdir(parents=True, exist_ok=True)
+    (settings.state_dir / "latest-normalized.json").write_text(
+        json.dumps(
+            {
+                "accounts": [account.model_dump(mode="json") for account in accounts],
+                "contents": [content.model_dump(mode="json") for content in contents],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    (settings.state_dir / "last-run.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    return summary
