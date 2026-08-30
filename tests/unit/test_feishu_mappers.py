@@ -3,7 +3,12 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 
 from creator_monitor.domain.models import Account, Content, Platform
-from creator_monitor.feishu.mappers import account_pending, content_pending, prepare_content_update
+from creator_monitor.feishu.mappers import (
+    account_pending,
+    content_pending,
+    prepare_account_update,
+    prepare_content_update,
+)
 from creator_monitor.feishu.records import ExistingRecord
 
 
@@ -53,6 +58,28 @@ def test_content_mapper_sets_inbox_defaults_and_recent_flag() -> None:
     assert pending.fields["拆解状态"] == ["未拆解"]
     assert pending.fields["近60天"] is True
     assert pending.fields["收藏率"] == 0.25
+
+
+def test_account_update_preserves_controls_and_calculates_follower_gap() -> None:
+    account = Account(
+        platform=Platform.DOUYIN,
+        account_id="sec-demo",
+        nickname="演示账号",
+        followers=1200,
+        fetched_at=NOW,
+        raw_hash="new-account-hash",
+    )
+    existing = ExistingRecord(
+        record_id="rec-account",
+        fields={"粉丝数": 1000, "启用监控": False, "监控状态": ["暂停"], "抓取频率小时": 24},
+    )
+
+    updated = prepare_account_update(account_pending(account), existing)
+
+    assert updated.fields["粉丝增量"] == 200
+    assert updated.fields["启用监控"] is False
+    assert updated.fields["监控状态"] == ["暂停"]
+    assert updated.fields["抓取频率小时"] == 24
 
 
 def test_content_update_preserves_previous_metrics_and_calculates_gap() -> None:

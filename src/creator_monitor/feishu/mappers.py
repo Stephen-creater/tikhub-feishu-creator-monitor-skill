@@ -55,6 +55,18 @@ def account_pending(account: Account) -> PendingRecord:
     return PendingRecord(account.business_key, digest, fields)
 
 
+def prepare_account_update(pending: PendingRecord, existing: ExistingRecord) -> PendingRecord:
+    fields = dict(pending.fields)
+    previous = existing.fields.get("粉丝数")
+    current = fields.get("粉丝数")
+    if isinstance(previous, (int, float)) and isinstance(current, (int, float)):
+        fields["粉丝增量"] = int(current - previous)
+    for control in ("启用监控", "监控状态", "抓取频率小时", "首次发现时间"):
+        if control in existing.fields:
+            fields[control] = existing.fields[control]
+    return PendingRecord(pending.business_key, pending.raw_hash, fields)
+
+
 def content_pending(content: Content, *, now: datetime) -> PendingRecord:
     digest = content.raw_hash or _digest(content.model_dump(mode="json"))
     save_rate = (
