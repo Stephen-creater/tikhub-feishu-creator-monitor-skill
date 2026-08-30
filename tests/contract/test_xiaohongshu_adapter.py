@@ -11,7 +11,6 @@ from creator_monitor.tikhub.xiaohongshu import (
     normalize_profile,
 )
 
-
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "tikhub"
 FETCHED_AT = datetime(2026, 8, 30, 10, tzinfo=UTC)
 

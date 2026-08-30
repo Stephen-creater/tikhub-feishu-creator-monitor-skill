@@ -11,7 +11,6 @@ from creator_monitor.feishu.mappers import (
 )
 from creator_monitor.feishu.records import ExistingRecord
 
-
 NOW = datetime(2026, 8, 30, 10, tzinfo=UTC)
 
 

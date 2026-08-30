@@ -7,7 +7,6 @@ from zoneinfo import ZoneInfo
 from creator_monitor.domain.models import Account, Comment, Content, MetricSnapshot, Platform
 from creator_monitor.feishu.records import ExistingRecord, PendingRecord
 
-
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 PLATFORM_LABEL = {Platform.DOUYIN: "抖音", Platform.XIAOHONGSHU: "小红书"}
 

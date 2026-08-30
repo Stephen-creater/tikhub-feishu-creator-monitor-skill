@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Iterator
 from contextlib import contextmanager
 from decimal import Decimal
 from pathlib import Path
-from typing import Iterator
 
 from creator_monitor.errors import BudgetExceeded
 

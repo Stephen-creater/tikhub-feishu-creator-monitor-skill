@@ -101,7 +101,7 @@ def run_scheduled_sync(
                 accounts.append(xiaohongshu.normalize_profile(profile, fetched_at=started))
                 normalized, _ = xiaohongshu.normalize_notes(notes, fetched_at=started)
             contents.extend(normalized)
-        except Exception as exc:  # One account must not abort the batch.
+        except Exception as exc:  # noqa: BLE001 - one account must not abort the batch.
             failures.append(
                 {
                     "object_key": f"{platform.value}:{account_id}",

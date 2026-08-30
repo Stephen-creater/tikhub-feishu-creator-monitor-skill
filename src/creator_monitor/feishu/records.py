@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import Callable, Iterable, Protocol, TypeVar
+from typing import Protocol, TypeVar
 
 from creator_monitor.feishu.cli import LarkCLI
 

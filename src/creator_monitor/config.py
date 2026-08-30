@@ -3,9 +3,9 @@ from __future__ import annotations
 import os
 import platform
 import subprocess
+from collections.abc import Mapping
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from typing import Mapping
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, ValidationError
 
@@ -32,7 +32,7 @@ class Settings(BaseModel):
     analysis_url: str | None = None
 
     @classmethod
-    def from_env(cls, env: Mapping[str, str] | None = None) -> "Settings":
+    def from_env(cls, env: Mapping[str, str] | None = None) -> Settings:
         source = os.environ if env is None else env
         api_key = source.get("TIKHUB_API_KEY") or None
         keychain_service = source.get(

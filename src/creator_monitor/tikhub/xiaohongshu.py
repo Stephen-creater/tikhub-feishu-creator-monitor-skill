@@ -17,7 +17,6 @@ from creator_monitor.tikhub._normalize import (
 from creator_monitor.tikhub.client import Endpoint
 from creator_monitor.tikhub.models import PageInfo
 
-
 PROFILE = Endpoint(
     "xiaohongshu.profile", "/api/v1/xiaohongshu/app_v2/get_user_info", Decimal("0.01")
 )

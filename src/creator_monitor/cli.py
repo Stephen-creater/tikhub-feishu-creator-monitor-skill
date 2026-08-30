@@ -8,9 +8,8 @@ import typer
 
 from creator_monitor.config import Settings
 from creator_monitor.feishu.bootstrap import BootstrapPlan, execute_bootstrap
-from creator_monitor.services.sync import run_scheduled_sync
 from creator_monitor.services.report import send_daily_report
-
+from creator_monitor.services.sync import run_scheduled_sync
 
 app = typer.Typer(help="TikHub × Feishu creator monitoring Skill runtime")
 
