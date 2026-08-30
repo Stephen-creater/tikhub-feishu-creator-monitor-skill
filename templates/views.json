@@ -1,0 +1,12 @@
+{
+  "table": "内容库",
+  "views": [
+    {"name": "内容总库", "type": "grid"},
+    {"name": "待处理新内容", "type": "grid"},
+    {"name": "爆款排行榜", "type": "grid"},
+    {"name": "干货收藏榜", "type": "grid"},
+    {"name": "灵感画册", "type": "gallery"},
+    {"name": "翻拍执行看板", "type": "kanban"}
+  ]
+}
+
