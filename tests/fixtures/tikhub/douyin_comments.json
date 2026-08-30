@@ -1,0 +1,20 @@
+{
+  "code": 200,
+  "request_id": "req-douyin-comments",
+  "data": {
+    "comments": [
+      {
+        "cid": "comment-dy-1",
+        "aweme_id": "7500000000000000001",
+        "text": "这个方法具体怎么做？",
+        "create_time": 1788061000,
+        "digg_count": 18,
+        "reply_comment_total": 2,
+        "user": {"uid": "viewer-1"}
+      }
+    ],
+    "cursor": 20,
+    "has_more": 0
+  }
+}
+

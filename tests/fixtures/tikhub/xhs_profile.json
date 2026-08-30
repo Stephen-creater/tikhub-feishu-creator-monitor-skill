@@ -1,0 +1,22 @@
+{
+  "code": 200,
+  "request_id": "req-xhs-profile",
+  "data": {
+    "data": {
+      "userBasicInfo": {
+        "userId": "61b46d790000000010008153",
+        "nickname": "小红书演示账号",
+        "redId": "demo-red-id",
+        "desc": "公开演示简介",
+        "images": "https://example.com/xhs-avatar.jpg"
+      },
+      "interactions": [
+        {"type": "fans", "count": "2.3万"},
+        {"type": "follows", "count": "128"},
+        {"type": "interaction", "count": "15.6万"}
+      ],
+      "noteCount": 75
+    }
+  }
+}
+

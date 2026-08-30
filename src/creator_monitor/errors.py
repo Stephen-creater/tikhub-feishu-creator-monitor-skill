@@ -11,3 +11,11 @@ class ConfigurationError(CreatorMonitorError):
 
 class BudgetExceeded(CreatorMonitorError):
     """A TikHub call would exceed a configured safety limit."""
+
+
+class TikHubAPIError(CreatorMonitorError):
+    """TikHub returned a non-successful business response."""
+
+
+class TikHubTransportError(CreatorMonitorError):
+    """TikHub could not be reached after bounded retries."""
