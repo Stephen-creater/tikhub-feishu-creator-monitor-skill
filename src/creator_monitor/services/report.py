@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 from creator_monitor.config import Settings
 from creator_monitor.errors import ConfigurationError

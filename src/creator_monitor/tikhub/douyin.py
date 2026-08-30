@@ -17,7 +17,6 @@ from creator_monitor.tikhub._normalize import (
 from creator_monitor.tikhub.client import Endpoint
 from creator_monitor.tikhub.models import PageInfo
 
-
 PROFILE = Endpoint(
     "douyin.profile", "/api/v1/douyin/app/v3/handler_user_profile", Decimal("0.01")
 )

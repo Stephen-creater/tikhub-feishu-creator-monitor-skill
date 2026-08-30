@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
-from typing import Iterable, Mapping
 
 
 def first(mapping: Mapping[str, object], names: Iterable[str], default: object = None) -> object:
@@ -56,7 +56,7 @@ def parse_timestamp(value: object) -> datetime:
     if isinstance(value, datetime):
         return value if value.tzinfo else value.replace(tzinfo=UTC)
     if isinstance(value, str) and not value.isdigit():
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value)
         return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
     number = float(value)
     if number > 10_000_000_000:
@@ -86,4 +86,3 @@ def anonymized_id(value: object) -> str | None:
     if value in (None, ""):
         return None
     return hashlib.sha256(str(value).encode("utf-8")).hexdigest()[:24]
-

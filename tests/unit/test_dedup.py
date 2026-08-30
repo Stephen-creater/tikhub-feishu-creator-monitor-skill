@@ -5,7 +5,6 @@ from datetime import UTC, datetime, timedelta
 from creator_monitor.domain.dedup import deduplicate_latest
 from creator_monitor.domain.models import Content, Platform
 
-
 NOW = datetime(2026, 8, 30, 9, tzinfo=UTC)
 
 

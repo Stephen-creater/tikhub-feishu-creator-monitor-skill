@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 from creator_monitor.feishu.cli import LarkCLI
 
@@ -30,7 +30,7 @@ class BootstrapPlan:
     views: list[ViewSpec]
 
     @classmethod
-    def from_templates(cls, schema_path: Path, views_path: Path) -> "BootstrapPlan":
+    def from_templates(cls, schema_path: Path, views_path: Path) -> BootstrapPlan:
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         view_config = json.loads(views_path.read_text(encoding="utf-8"))
         return cls(

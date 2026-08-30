@@ -5,7 +5,6 @@ from pathlib import Path
 
 from creator_monitor.feishu.bootstrap import BootstrapPlan, _named_id_map
 
-
 ROOT = Path(__file__).resolve().parents[2]
 
 

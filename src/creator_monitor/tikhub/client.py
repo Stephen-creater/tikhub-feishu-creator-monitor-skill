@@ -6,14 +6,13 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
-from typing import Callable, Mapping
 
 from creator_monitor.budget import BudgetGuard
 from creator_monitor.errors import TikHubAPIError, TikHubTransportError
-
 
 BASE_URL = "https://api.tikhub.io"
 Transport = Callable[[str, dict[str, str], float], dict]
