@@ -5,8 +5,9 @@
 ## 代码与 Skill
 
 - 单一 `creator-monitor` Skill，公共入口为 `doctor`、`bootstrap`、`scheduled-sync`、`daily-report`。
-- 42 项单元、契约和集成测试通过。
+- 43 项单元、契约和集成测试通过。
 - Skill frontmatter、引用路径与运行入口通过官方 quick validator。
+- GitHub Actions 的 Ruff 与 pytest 质量门通过；`v0.1.0` Release 已发布。
 - TikHub Key 保存在 macOS 钥匙串；仓库、fixture、日志与飞书正文没有密钥。
 
 ## TikHub
