@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import platform
+import subprocess
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Mapping
@@ -25,10 +27,17 @@ class Settings(BaseModel):
     config_path: Path = Path("runtime/config.json")
     max_usd: Decimal = Field(default=Decimal("0.50"), gt=0)
     max_requests_per_run: int = Field(default=20, ge=1, le=1000)
+    keychain_service: str = "creator-monitor-tikhub"
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> "Settings":
         source = os.environ if env is None else env
+        api_key = source.get("TIKHUB_API_KEY") or None
+        keychain_service = source.get(
+            "CREATOR_MONITOR_KEYCHAIN_SERVICE", "creator-monitor-tikhub"
+        )
+        if api_key is None and env is None:
+            api_key = _read_macos_keychain(keychain_service)
         raw_budget = source.get("CREATOR_MONITOR_MAX_USD", "0.50")
         try:
             budget = Decimal(raw_budget)
@@ -37,7 +46,7 @@ class Settings(BaseModel):
 
         try:
             return cls(
-                tikhub_api_key=source.get("TIKHUB_API_KEY") or None,
+                tikhub_api_key=api_key,
                 base_token=source.get("CREATOR_MONITOR_BASE_TOKEN") or None,
                 state_dir=Path(source.get("CREATOR_MONITOR_STATE_DIR", "runtime")),
                 config_path=Path(
@@ -47,6 +56,7 @@ class Settings(BaseModel):
                 max_requests_per_run=int(
                     source.get("CREATOR_MONITOR_MAX_REQUESTS_PER_RUN", "20")
                 ),
+                keychain_service=keychain_service,
             )
         except (ValidationError, ValueError) as exc:
             raise ConfigurationError("creator monitor configuration is invalid") from exc
@@ -71,4 +81,19 @@ class Settings(BaseModel):
             "config_path": str(self.config_path),
             "max_usd": str(self.max_usd),
             "max_requests_per_run": self.max_requests_per_run,
+            "keychain_service": self.keychain_service,
         }
+
+
+def _read_macos_keychain(service: str) -> str | None:
+    if platform.system() != "Darwin":
+        return None
+    completed = subprocess.run(
+        ["security", "find-generic-password", "-w", "-s", service],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if completed.returncode != 0:
+        return None
+    return completed.stdout.strip() or None
