@@ -52,9 +52,8 @@ def test_content_mapper_sets_inbox_defaults_and_recent_flag() -> None:
     pending = content_pending(content, now=NOW)
 
     assert pending.fields["平台"] == ["小红书"]
-    assert pending.fields["已阅"] is False
-    assert pending.fields["跟进状态"] == ["待处理"]
-    assert pending.fields["拆解状态"] == ["未拆解"]
+    assert pending.fields["状态"] == ["待处理"]
+    assert pending.fields["数据来源"] == ["真实抓取"]
     assert pending.fields["近60天"] is True
     assert pending.fields["收藏率"] == 0.25
 
@@ -104,9 +103,7 @@ def test_content_update_preserves_previous_metrics_and_calculates_gap() -> None:
             "收藏数": 20,
             "评论数": 10,
             "分享数": 5,
-            "已阅": True,
-            "跟进状态": ["待拆解"],
-            "拆解状态": ["待拆解"],
+            "状态": ["已采用"],
         },
     )
 
@@ -115,6 +112,5 @@ def test_content_update_preserves_previous_metrics_and_calculates_gap() -> None:
     assert updated.fields["旧点赞数"] == 100
     assert updated.fields["点赞增量"] == 80
     assert updated.fields["收藏增量"] == 25
-    assert updated.fields["已阅"] is True
-    assert updated.fields["跟进状态"] == ["待拆解"]
+    assert updated.fields["状态"] == ["已采用"]
     assert updated.fields["爆款指数"] > 0

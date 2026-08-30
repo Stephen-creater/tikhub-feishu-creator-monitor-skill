@@ -70,18 +70,18 @@ def build_daily_report_card(
         "config": {
             "update_multi": True,
             "width_mode": "fill",
-            "summary": {"content": "TikHub 自媒体竞品监控 MVP 战报"},
+            "summary": {"content": "自媒体竞品情报日报"},
         },
         "header": {
-            "title": {"tag": "plain_text", "content": "自媒体竞品监控战报"},
+            "title": {"tag": "plain_text", "content": "自媒体竞品情报日报"},
             "subtitle": {"tag": "plain_text", "content": "TikHub × Codex Skill × 飞书 Base"},
             "template": "blue",
             "icon": {"tag": "standard_icon", "token": "wiki-bitable_colorful"},
             "text_tag_list": [
                 {
                     "tag": "text_tag",
-                    "text": {"tag": "plain_text", "content": "MVP 已跑通"},
-                    "color": "blue",
+                    "text": {"tag": "plain_text", "content": "自动更新"},
+                    "color": "green",
                 }
             ],
         },
@@ -96,8 +96,8 @@ def build_daily_report_card(
                     "horizontal_spacing": "12px",
                     "columns": [
                         _kpi_column(str(account_count), "监控账号"),
-                        _kpi_column(str(content_count), "内容总量"),
-                        _kpi_column(str(updated_count), "本轮变化"),
+                        _kpi_column(str(content_count), "真实作品"),
+                        _kpi_column(str(updated_count), "今日变化"),
                     ],
                 },
                 {
@@ -117,11 +117,7 @@ def build_daily_report_card(
                 },
                 {
                     "tag": "markdown",
-                    "content": (
-                        "**运行说明**\n"
-                        f"本次 TikHub 保守预算账本累计 **${reserved_usd}**。"
-                        "重复业务键已通过二次同步验证；抓取失败会记录为 partial，不影响其他账号。"
-                    ),
+                    "content": "**今日建议**\n优先查看榜单前三和高收藏内容，再决定标记为“已采用”或继续留在“待处理”。",
                     "text_size": "normal",
                 },
                 {

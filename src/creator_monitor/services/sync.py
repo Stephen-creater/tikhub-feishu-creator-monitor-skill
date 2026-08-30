@@ -116,7 +116,7 @@ def run_scheduled_sync(
     store = FeishuRecordStore(base_token=manifest["base_token"])
     account_result = store.sync(
         table_id=manifest["tables"]["账号库"],
-        key_field="账号键",
+        key_field="内部账号键",
         hash_field="数据哈希",
         records=[account_pending(account) for account in accounts],
         select_fields=["粉丝数", "启用监控", "监控状态", "抓取频率小时", "首次发现时间"],
@@ -133,7 +133,7 @@ def run_scheduled_sync(
         pending_contents.append(PendingRecord(pending.business_key, pending.raw_hash, fields))
     content_result = store.sync(
         table_id=manifest["tables"]["内容库"],
-        key_field="内容键",
+        key_field="内部内容键",
         hash_field="数据哈希",
         records=pending_contents,
         select_fields=[
@@ -142,9 +142,13 @@ def run_scheduled_sync(
             "收藏数",
             "评论数",
             "分享数",
-            "已阅",
-            "跟进状态",
-            "拆解状态",
+            "状态",
+            "内容方向",
+            "账号地区",
+            "数据来源",
+            "本周排名",
+            "推荐理由",
+            "采用时间",
             "拆解文档",
             "ASR文案",
             "跟进建议",
@@ -204,7 +208,7 @@ def run_scheduled_sync(
         comments = deduplicate_latest(sampled_comments).records
         comment_result = store.sync(
             table_id=manifest["tables"]["评论库"],
-            key_field="评论键",
+            key_field="内部评论键",
             hash_field="数据哈希",
             records=[comment_pending(comment) for comment in comments],
         )

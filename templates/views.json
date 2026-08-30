@@ -1,47 +1,11 @@
 {
   "table": "内容库",
   "views": [
-    {
-      "name": "内容总库",
-      "type": "grid",
-      "sort": [{"field": "发布时间", "desc": true}],
-      "group": [{"field": "账号昵称", "desc": false}],
-      "visible_fields": ["内容键", "平台", "账号昵称", "标题", "封面", "发布时间", "播放数", "点赞数", "收藏数", "评论数", "分享数", "播放增量", "点赞增量", "收藏增量", "评论增量", "爆款等级", "跟进状态", "内容链接"]
-    },
-    {
-      "name": "待处理新内容",
-      "type": "grid",
-      "filter": {"logic": "and", "conditions": [["已阅", "==", false], ["跟进状态", "intersects", ["待处理"]]]},
-      "sort": [{"field": "发布时间", "desc": true}],
-      "visible_fields": ["标题", "封面", "账号昵称", "发布时间", "点赞数", "收藏数", "评论数", "内容链接", "已阅", "跟进状态"]
-    },
-    {
-      "name": "爆款排行榜",
-      "type": "grid",
-      "filter": {"logic": "and", "conditions": [["近60天", "==", true]]},
-      "sort": [{"field": "点赞增量", "desc": true}, {"field": "收藏增量", "desc": true}, {"field": "爆款指数", "desc": true}],
-      "visible_fields": ["标题", "封面", "账号昵称", "发布时间", "点赞增量", "收藏增量", "评论增量", "爆款指数", "爆款等级", "内容链接", "跟进状态"]
-    },
-    {
-      "name": "干货收藏榜",
-      "type": "grid",
-      "filter": {"logic": "and", "conditions": [["近60天", "==", true]]},
-      "sort": [{"field": "收藏率", "desc": true}, {"field": "收藏增量", "desc": true}],
-      "visible_fields": ["标题", "封面", "账号昵称", "发布时间", "收藏率", "收藏数", "收藏增量", "点赞数", "内容链接", "跟进状态"]
-    },
-    {
-      "name": "灵感画册",
-      "type": "gallery",
-      "filter": {"logic": "and", "conditions": [["近60天", "==", true]]},
-      "sort": [{"field": "发布时间", "desc": true}],
-      "visible_fields": ["封面", "标题", "账号昵称", "发布时间", "点赞数", "收藏数", "爆款等级", "内容链接"]
-    },
-    {
-      "name": "翻拍执行看板",
-      "type": "kanban",
-      "sort": [{"field": "发布时间", "desc": true}],
-      "group": [{"field": "跟进状态", "desc": false}],
-      "visible_fields": ["标题", "封面", "账号昵称", "跟进状态", "拆解状态", "拆解文档", "发布时间"]
-    }
+    {"name":"内容总览","type":"grid","sort":[{"field":"发布时间","desc":true}],"visible_fields":["作品","封面","平台","账号昵称","内容方向","账号地区","发布时间","点赞数","收藏数","评论数","爆款等级","状态","内容链接"]},
+    {"name":"待处理","type":"grid","filter":{"logic":"and","conditions":[["状态","intersects",["待处理"]]]},"sort":[{"field":"爆款指数","desc":true}],"visible_fields":["作品","封面","账号昵称","内容方向","发布时间","点赞数","收藏数","爆款等级","推荐理由","状态","内容链接"]},
+    {"name":"本周榜单","type":"grid","filter":{"logic":"and","conditions":[["本周排名","non_empty"]]},"sort":[{"field":"本周排名","desc":false}],"visible_fields":["作品","本周排名","封面","账号昵称","内容方向","点赞数","收藏数","评论数","爆款指数","状态","内容链接"]},
+    {"name":"高收藏选题","type":"grid","sort":[{"field":"收藏数","desc":true}],"visible_fields":["作品","封面","账号昵称","内容方向","收藏数","点赞数","收藏率","推荐理由","状态","内容链接"]},
+    {"name":"封面灵感","type":"gallery","sort":[{"field":"爆款指数","desc":true}],"visible_fields":["作品","封面","账号昵称","内容方向","点赞数","收藏数","爆款等级","状态"]},
+    {"name":"选题看板","type":"kanban","sort":[{"field":"爆款指数","desc":true}],"group":[{"field":"状态","desc":false}],"visible_fields":["作品","封面","账号昵称","内容方向","爆款等级","推荐理由","状态"]}
   ]
 }

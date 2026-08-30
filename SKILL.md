@@ -1,44 +1,54 @@
 ---
 name: creator-monitor
-description: "使用 TikHub、Codex 定时任务和飞书多维表格追踪抖音或小红书对标账号，完成账号与作品同步、评论采样、幂等去重、指标快照、爆款战报、附件归档和内容拆解。用户要搭建、运行、检查或排错自媒体竞品监控系统时使用。"
-metadata:
-  short-description: "TikHub 与飞书自媒体竞品监控"
+description: Track public Douyin and Xiaohongshu competitor accounts with TikHub, keep a user-friendly 飞书 Feishu Base updated, and surface content rankings, real covers, trends, comment needs, and a two-state idea pipeline. Use when the user asks to monitor creator accounts, refresh creator intelligence, build a 飞书 content dashboard, or run the scheduled creator-monitor sync.
 ---
 
 # Creator Monitor
 
-把自媒体监控当成可审计的数据同步系统，而不是临时拼接的节点工作流。
+Use this Skill to operate a creator intelligence workspace built from Codex, TikHub and Feishu Base.
 
-## 入口
+## User outcome
 
-从 Skill 根目录运行：
+The user should see:
+
+- an account library with recognizable names, avatars, positioning, region and performance;
+- a content library with each work's real cover, readable metrics and recommendation reason;
+- one ranked list whose Top 1, Top 2 and Top 3 match the dashboard;
+- a gallery for cover and topic inspiration;
+- one board with only `待处理` and `已采用`;
+- a dense dashboard for accounts, content, rankings, distribution and trends.
+
+Do not expose maintenance metadata in default views, reports or tutorials. Keep it in the maintenance area only when required for correct synchronization.
+
+## Commands
+
+Run from the Skill root:
 
 ```bash
-scripts/creator-monitor <command> [options]
+scripts/creator-monitor doctor
+scripts/creator-monitor bootstrap
+scripts/creator-monitor scheduled-sync
+scripts/creator-monitor daily-report
 ```
 
-进入实际操作前先运行 `scripts/creator-monitor doctor`。需要创建或检查飞书结构时读取 [数据契约](references/data-contract.md)；需要定时运行、恢复失败或控制额度时读取 [运行手册](references/operations.md)。
+Use `scheduled-sync --use-cache` only for a zero-cost scheduling check. Use `--include-comments` only when the user needs comment insight and the budget allows it.
 
-## 公共命令
+## Operating rules
 
-- `bootstrap`：创建或复用飞书 Base Schema；先使用 `--dry-run`。
-- `scheduled-sync`：供 Codex 定时任务调用的完整同步入口。
-- `daily-report`：生成并发送每日爆款战报。
-- `doctor`：检查配置、凭据、接口、飞书 Schema 和消费预算。
+1. Read local configuration and run `doctor` before the first live operation.
+2. Keep TikHub secrets in the environment or OS key store; never write them to Git, Feishu or logs.
+3. Keep stable internal identity out of user-facing views.
+4. Preserve user decisions such as `状态`, `推荐理由`, `采用时间` and analysis links during refreshes.
+5. A work's cover must come from that public work. Download it and store it as a Feishu attachment; never substitute generated artwork.
+6. Use the fixed ranking formula documented in `references/data-contract.md` unless the user explicitly changes it.
+7. Stop before a TikHub request would exceed the configured request or dollar limit.
+8. Verify the real Base after writes: record counts, blank covers, state distribution, ranking consistency and dashboard results.
 
-`scheduled-sync` 内部依次执行账号入库、内容入库、指标快照和可选评论采样。附件转存与拆解建档属于需要明确内容目标的高成本能力：先读取目标记录，再使用飞书附件、妙记和文档工具完成，不要将目标内容或媒体范围交给模型猜测。
+## Data presentation
 
-## 不变量
+- Default business views contain only readable business fields.
+- The only workflow states are `待处理` and `已采用`.
+- Real crawled records and simulated historical snapshots must be labelled separately.
+- Keep system maintenance tables under a maintenance folder.
 
-1. TikHub Key、飞书 Token 和原始敏感响应不得写入 Git、飞书正文或普通日志。
-2. 账号、内容、评论和快照分别使用稳定业务键；不能用昵称、标题或展示链接作唯一键。
-3. 同一批次先内存去重，再按候选业务键查询飞书；禁止每轮扫描整个历史表。
-4. 游标只在相关记录全部写入成功后推进。
-5. 同一飞书数据表串行写入，每批不超过 200 条。
-6. 达到请求数或美元预算上限时立即停止，不得为追求完整度绕过预算保护。
-7. 抓取、分页、重试、去重和增量计算由确定性代码完成；模型只处理需要理解力的拆解与说明。
-8. 单条失败进入失败队列，不得中断整个批次；认证、参数和 Schema 错误应快速失败。
-
-## 完成证据
-
-不能只凭命令退出码宣布成功。至少读回并核对：运行日志、账号和内容记录数、第二次运行的重复数、快照增量、失败队列、拆解文档链接、战报发送结果和仪表盘组件。
+Read `references/operations.md` for failure handling and `references/data-contract.md` for the maintained data contract.

@@ -38,7 +38,7 @@ def test_first_command_creates_base_and_account_table() -> None:
     assert "--as" in command and "user" in command
     assert "--dry-run" in command
     fields = json.loads(command[command.index("--fields") + 1])
-    assert fields[0]["name"] == "账号键"
+    assert fields[0]["name"] == "账号"
     assert fields[0]["type"] == "text"
     assert not any("token" in argument.casefold() for argument in command)
 

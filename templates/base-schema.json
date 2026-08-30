@@ -1,14 +1,18 @@
 {
-  "base_name": "TikHub 自媒体竞品监控系统（Skill 版）",
+  "base_name": "自媒体竞品情报中心",
   "time_zone": "Asia/Shanghai",
   "tables": [
     {
       "name": "账号库",
       "fields": [
-        {"type": "text", "name": "账号键", "description": "platform:account_id，外部业务主键"},
+        {"type": "text", "name": "账号"},
         {"type": "select", "name": "平台", "multiple": false, "options": [{"name": "抖音", "hue": "Blue"}, {"name": "小红书", "hue": "Red"}]},
         {"type": "text", "name": "账号ID"},
         {"type": "text", "name": "昵称"},
+        {"type": "text", "name": "内部账号键", "description": "系统去重字段，默认视图隐藏"},
+        {"type": "select", "name": "账号类型", "multiple": false, "options": [{"name": "AI 工具", "hue": "Purple"}, {"name": "科技科普", "hue": "Blue"}, {"name": "个人成长", "hue": "Green"}, {"name": "生活方式", "hue": "Orange"}]},
+        {"type": "select", "name": "主要地区", "multiple": false, "options": [{"name": "北京"}, {"name": "上海"}, {"name": "广东"}, {"name": "浙江"}, {"name": "江苏"}, {"name": "福建"}, {"name": "四川"}, {"name": "海外"}, {"name": "其他"}]},
+        {"type": "select", "name": "数据来源", "multiple": false, "options": [{"name": "真实抓取", "hue": "Green"}, {"name": "演示历史", "hue": "Gray"}]},
         {"type": "text", "name": "账号主页", "style": {"type": "url"}},
         {"type": "attachment", "name": "头像"},
         {"type": "text", "name": "头像原始链接", "style": {"type": "url"}},
@@ -18,6 +22,7 @@
         {"type": "number", "name": "关注数", "style": {"type": "plain", "precision": 0, "thousands_separator": true}},
         {"type": "number", "name": "作品数", "style": {"type": "plain", "precision": 0, "thousands_separator": true}},
         {"type": "number", "name": "总获赞数", "style": {"type": "plain", "precision": 0, "thousands_separator": true}},
+        {"type": "number", "name": "近30天平均互动", "style": {"type": "plain", "precision": 0, "thousands_separator": true}},
         {"type": "checkbox", "name": "启用监控"},
         {"type": "number", "name": "抓取频率小时", "default_value": 6},
         {"type": "select", "name": "监控状态", "multiple": false, "options": [{"name": "正常", "hue": "Green"}, {"name": "暂停", "hue": "Gray"}, {"name": "异常", "hue": "Red"}]},
@@ -32,11 +37,15 @@
     {
       "name": "内容库",
       "fields": [
-        {"type": "text", "name": "内容键", "description": "platform:content_id，外部业务主键"},
+        {"type": "text", "name": "作品"},
         {"type": "select", "name": "平台", "multiple": false, "options": [{"name": "抖音", "hue": "Blue"}, {"name": "小红书", "hue": "Red"}]},
         {"type": "text", "name": "内容ID"},
-        {"type": "text", "name": "账号键"},
+        {"type": "text", "name": "内部内容键", "description": "系统去重字段，默认视图隐藏"},
+        {"type": "text", "name": "内部账号键"},
         {"type": "text", "name": "账号昵称"},
+        {"type": "select", "name": "内容方向", "multiple": false, "options": [{"name": "AI 工具", "hue": "Purple"}, {"name": "技术科普", "hue": "Blue"}, {"name": "效率方法", "hue": "Green"}, {"name": "职场成长", "hue": "Orange"}, {"name": "生活方式", "hue": "Carmine"}, {"name": "其他", "hue": "Gray"}]},
+        {"type": "select", "name": "账号地区", "multiple": false, "options": [{"name": "北京"}, {"name": "上海"}, {"name": "广东"}, {"name": "浙江"}, {"name": "江苏"}, {"name": "福建"}, {"name": "四川"}, {"name": "海外"}, {"name": "其他"}]},
+        {"type": "select", "name": "数据来源", "multiple": false, "options": [{"name": "真实抓取", "hue": "Green"}, {"name": "演示历史", "hue": "Gray"}]},
         {"type": "text", "name": "标题"},
         {"type": "text", "name": "正文摘要"},
         {"type": "text", "name": "内容链接", "style": {"type": "url"}},
@@ -65,9 +74,10 @@
         {"type": "number", "name": "爆款指数", "style": {"type": "plain", "precision": 2}},
         {"type": "select", "name": "爆款等级", "multiple": false, "options": [{"name": "S", "hue": "Red", "lightness": "Standard"}, {"name": "A", "hue": "Orange"}, {"name": "B", "hue": "Blue"}, {"name": "C", "hue": "Gray"}]},
         {"type": "checkbox", "name": "近60天"},
-        {"type": "checkbox", "name": "已阅"},
-        {"type": "select", "name": "跟进状态", "multiple": false, "options": [{"name": "待处理", "hue": "Blue"}, {"name": "待拆解", "hue": "Purple"}, {"name": "拆解中", "hue": "Orange"}, {"name": "已建档", "hue": "Green"}, {"name": "待翻拍", "hue": "Carmine"}, {"name": "拍摄中", "hue": "Yellow"}, {"name": "已完成", "hue": "Green", "lightness": "Dark"}, {"name": "忽略", "hue": "Gray"}]},
-        {"type": "select", "name": "拆解状态", "multiple": false, "options": [{"name": "未拆解", "hue": "Gray"}, {"name": "待拆解", "hue": "Purple"}, {"name": "拆解中", "hue": "Orange"}, {"name": "已建档", "hue": "Green"}, {"name": "拆解失败", "hue": "Red"}]},
+        {"type": "select", "name": "状态", "multiple": false, "default_value": ["待处理"], "options": [{"name": "待处理", "hue": "Blue"}, {"name": "已采用", "hue": "Green"}]},
+        {"type": "number", "name": "本周排名", "style": {"type": "plain", "precision": 0}},
+        {"type": "text", "name": "推荐理由"},
+        {"type": "datetime", "name": "采用时间", "style": {"format": "yyyy-MM-dd HH:mm"}},
         {"type": "text", "name": "拆解文档", "style": {"type": "url"}},
         {"type": "text", "name": "ASR文案"},
         {"type": "text", "name": "跟进建议"},
@@ -97,15 +107,17 @@
         {"type": "number", "name": "评论增量", "style": {"type": "plain", "precision": 0}},
         {"type": "number", "name": "分享增量", "style": {"type": "plain", "precision": 0}},
         {"type": "text", "name": "运行ID"}
+        ,{"type": "select", "name": "数据来源", "multiple": false, "options": [{"name": "真实抓取", "hue": "Green"}, {"name": "演示历史", "hue": "Gray"}]}
       ]
     },
     {
       "name": "评论库",
       "fields": [
-        {"type": "text", "name": "评论键"},
+        {"type": "text", "name": "评论"},
+        {"type": "text", "name": "内部评论键", "description": "系统去重字段，默认视图隐藏"},
         {"type": "select", "name": "平台", "multiple": false, "options": [{"name": "抖音", "hue": "Blue"}, {"name": "小红书", "hue": "Red"}]},
         {"type": "text", "name": "评论ID"},
-        {"type": "text", "name": "内容键"},
+        {"type": "text", "name": "内部内容键"},
         {"type": "text", "name": "父评论ID"},
         {"type": "text", "name": "评论内容"},
         {"type": "datetime", "name": "发布时间", "style": {"format": "yyyy-MM-dd HH:mm"}},

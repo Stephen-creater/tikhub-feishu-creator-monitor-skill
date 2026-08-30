@@ -11,11 +11,10 @@ def test_six_views_have_expected_business_configuration() -> None:
     views = {view["name"]: view for view in config["views"]}
 
     assert len(views) == 6
-    assert views["待处理新内容"]["filter"]["conditions"] == [
-        ["已阅", "==", False],
-        ["跟进状态", "intersects", ["待处理"]],
+    assert views["待处理"]["filter"]["conditions"] == [
+        ["状态", "intersects", ["待处理"]]
     ]
-    assert views["爆款排行榜"]["sort"][0] == {"field": "点赞增量", "desc": True}
-    assert views["干货收藏榜"]["sort"][0] == {"field": "收藏率", "desc": True}
-    assert views["灵感画册"]["type"] == "gallery"
-    assert views["翻拍执行看板"]["group"] == [{"field": "跟进状态", "desc": False}]
+    assert views["本周榜单"]["sort"][0] == {"field": "本周排名", "desc": False}
+    assert views["高收藏选题"]["sort"][0] == {"field": "收藏数", "desc": True}
+    assert views["封面灵感"]["type"] == "gallery"
+    assert views["选题看板"]["group"] == [{"field": "状态", "desc": False}]

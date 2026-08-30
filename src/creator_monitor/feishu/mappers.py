@@ -30,7 +30,8 @@ def account_pending(account: Account) -> PendingRecord:
     digest = account.raw_hash or _digest(account.model_dump(mode="json"))
     fields = _without_none(
         {
-            "账号键": account.business_key,
+            "账号": account.nickname or account.account_id,
+            "内部账号键": account.business_key,
             "平台": [PLATFORM_LABEL[account.platform]],
             "账号ID": account.account_id,
             "昵称": account.nickname,
@@ -78,10 +79,11 @@ def content_pending(content: Content, *, now: datetime) -> PendingRecord:
     now_aware = now if now.tzinfo else now.replace(tzinfo=UTC)
     fields = _without_none(
         {
-            "内容键": content.business_key,
+            "作品": content.title or content.description or content.content_id,
+            "内部内容键": content.business_key,
             "平台": [PLATFORM_LABEL[content.platform]],
             "内容ID": content.content_id,
-            "账号键": f"{content.platform.value}:{content.account_id}",
+            "内部账号键": f"{content.platform.value}:{content.account_id}",
             "标题": content.title or content.description or content.content_id,
             "正文摘要": content.description,
             "内容链接": content.canonical_url,
@@ -103,9 +105,8 @@ def content_pending(content: Content, *, now: datetime) -> PendingRecord:
             "爆款指数": 0,
             "爆款等级": ["C"],
             "近60天": (now_aware - published_aware).days <= 60,
-            "已阅": False,
-            "跟进状态": ["待处理"],
-            "拆解状态": ["未拆解"],
+            "状态": ["待处理"],
+            "数据来源": ["真实抓取"],
             "首次发现时间": _date(now),
             "最后抓取时间": _date(content.fetched_at),
             "数据哈希": digest,
@@ -149,7 +150,18 @@ def prepare_content_update(pending: PendingRecord, existing: ExistingRecord) -> 
         grade = "C"
     fields["爆款等级"] = [grade]
 
-    for control in ("已阅", "跟进状态", "拆解状态", "拆解文档", "ASR文案", "跟进建议"):
+    for control in (
+        "状态",
+        "内容方向",
+        "账号地区",
+        "数据来源",
+        "本周排名",
+        "推荐理由",
+        "采用时间",
+        "拆解文档",
+        "ASR文案",
+        "跟进建议",
+    ):
         if control in existing.fields:
             fields[control] = existing.fields[control]
     if "首次发现时间" in existing.fields:
@@ -161,10 +173,11 @@ def comment_pending(comment: Comment) -> PendingRecord:
     digest = comment.raw_hash or _digest(comment.model_dump(mode="json"))
     fields = _without_none(
         {
-            "评论键": comment.business_key,
+            "评论": comment.text[:80] or "评论",
+            "内部评论键": comment.business_key,
             "平台": [PLATFORM_LABEL[comment.platform]],
             "评论ID": comment.comment_id,
-            "内容键": f"{comment.platform.value}:{comment.content_id}",
+            "内部内容键": f"{comment.platform.value}:{comment.content_id}",
             "父评论ID": comment.parent_comment_id,
             "评论内容": comment.text,
             "发布时间": _date(comment.published_at),

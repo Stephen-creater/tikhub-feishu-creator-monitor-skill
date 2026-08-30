@@ -68,9 +68,25 @@ def first_url(value: object) -> str | None:
     if isinstance(value, str):
         return value or None
     if isinstance(value, list):
-        return next((item for item in value if isinstance(item, str) and item), None)
+        for item in value:
+            candidate = first_url(item)
+            if candidate:
+                return candidate
+        return None
     if isinstance(value, dict):
-        direct = first(value, ("url", "url_default", "urlDefault"))
+        direct = first(
+            value,
+            (
+                "url_size_large",
+                "urlSizeLarge",
+                "url",
+                "url_default",
+                "urlDefault",
+                "thumbnail",
+                "first_frame",
+                "master_url",
+            ),
+        )
         if isinstance(direct, str):
             return direct
         return first_url(first(value, ("url_list", "urlList", "images")))

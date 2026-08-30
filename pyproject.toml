@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "creator-monitor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Codex Skill for TikHub and Feishu creator monitoring"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -35,4 +35,3 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-
