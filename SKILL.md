@@ -15,7 +15,7 @@ The user should see:
 - a content library with each work's real cover, likes, comments, saves and recommendation reason;
 - one ranked list whose Top 1, Top 2 and Top 3 match the dashboard;
 - a gallery for cover and topic inspiration;
-- one board with only `待处理` and `已采用`;
+- one board with `待处理`, `已采用` and `已淘汰`;
 - comments linked to their source work with a one-to-many relation;
 - a dense dashboard for accounts, content, rankings, distribution and trends.
 
@@ -48,7 +48,7 @@ Use `scheduled-sync --use-cache` only for a zero-cost scheduling check. Use `--i
 ## Data presentation
 
 - Default business views contain only readable business fields.
-- The only workflow states are `待处理` and `已采用`.
+- The only workflow states are `待处理`, `已采用` and `已淘汰`.
 - Real crawled records and simulated historical snapshots must be labelled separately.
 - User-facing content metrics are likes, comments and saves; do not add derived rates.
 - Keep system maintenance tables under a maintenance folder.

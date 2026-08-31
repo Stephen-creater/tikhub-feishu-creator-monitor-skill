@@ -74,7 +74,7 @@
         {"type": "number", "name": "爆款指数", "style": {"type": "plain", "precision": 2}},
         {"type": "select", "name": "爆款等级", "multiple": false, "options": [{"name": "S", "hue": "Red", "lightness": "Standard"}, {"name": "A", "hue": "Orange"}, {"name": "B", "hue": "Blue"}, {"name": "C", "hue": "Gray"}]},
         {"type": "checkbox", "name": "近60天"},
-        {"type": "select", "name": "状态", "multiple": false, "default_value": ["待处理"], "options": [{"name": "待处理", "hue": "Blue"}, {"name": "已采用", "hue": "Green"}]},
+        {"type": "select", "name": "状态", "multiple": false, "default_value": ["待处理"], "options": [{"name": "待处理", "hue": "Blue"}, {"name": "已采用", "hue": "Green"}, {"name": "已淘汰", "hue": "Gray"}]},
         {"type": "number", "name": "本周排名", "style": {"type": "plain", "precision": 0}},
         {"type": "text", "name": "推荐理由"},
         {"type": "datetime", "name": "采用时间", "style": {"format": "yyyy-MM-dd HH:mm"}},

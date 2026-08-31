@@ -5,6 +5,7 @@
     {"name":"真实作品","type":"statistics","data_config":{"table_name":"内容库","count_all":true}},
     {"name":"待处理","type":"statistics","data_config":{"table_name":"内容库","count_all":true,"filter":{"conjunction":"and","conditions":[{"field_name":"状态","operator":"is","value":"待处理"}]}}},
     {"name":"已采用","type":"statistics","data_config":{"table_name":"内容库","count_all":true,"filter":{"conjunction":"and","conditions":[{"field_name":"状态","operator":"is","value":"已采用"}]}}},
+    {"name":"已淘汰","type":"statistics","data_config":{"table_name":"内容库","count_all":true,"filter":{"conjunction":"and","conditions":[{"field_name":"状态","operator":"is","value":"已淘汰"}]}}},
     {"name":"🥇 TOP 1 热度","type":"statistics","data_config":{"table_name":"内容库","series":[{"field_name":"爆款指数","rollup":"MAX"}],"filter":{"conjunction":"and","conditions":[{"field_name":"本周排名","operator":"is","value":1}]}}},
     {"name":"🥈 TOP 2 热度","type":"statistics","data_config":{"table_name":"内容库","series":[{"field_name":"爆款指数","rollup":"MAX"}],"filter":{"conjunction":"and","conditions":[{"field_name":"本周排名","operator":"is","value":2}]}}},
     {"name":"🥉 TOP 3 热度","type":"statistics","data_config":{"table_name":"内容库","series":[{"field_name":"爆款指数","rollup":"MAX"}],"filter":{"conjunction":"and","conditions":[{"field_name":"本周排名","operator":"is","value":3}]}}},
