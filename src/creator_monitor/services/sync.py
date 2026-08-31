@@ -206,11 +206,20 @@ def run_scheduled_sync(
                 comments, _ = xiaohongshu.normalize_comments(payload, fetched_at=started)
             sampled_comments.extend(comments)
         comments = deduplicate_latest(sampled_comments).records
+        pending_comments: list[PendingRecord] = []
+        for comment in comments:
+            pending = comment_pending(comment)
+            fields = dict(pending.fields)
+            content_key = f"{comment.platform.value}:{comment.content_id}"
+            content_record_id = content_result.record_ids_by_key.get(content_key)
+            if content_record_id:
+                fields["所属作品"] = [{"id": content_record_id}]
+            pending_comments.append(PendingRecord(pending.business_key, pending.raw_hash, fields))
         comment_result = store.sync(
             table_id=manifest["tables"]["评论库"],
             key_field="内部评论键",
             hash_field="数据哈希",
-            records=[comment_pending(comment) for comment in comments],
+            records=pending_comments,
         )
 
     finished = datetime.now(UTC)

@@ -33,6 +33,9 @@ def test_account_mapper_uses_feishu_cell_value_shapes() -> None:
     assert pending.fields["启用监控"] is True
     assert pending.fields["监控状态"] == ["正常"]
 
+    refreshed = account.model_copy(update={"fetched_at": NOW + timedelta(hours=1)})
+    assert account_pending(refreshed).raw_hash == pending.raw_hash
+
 
 def test_content_mapper_sets_inbox_defaults_and_recent_flag() -> None:
     content = Content(
@@ -55,7 +58,8 @@ def test_content_mapper_sets_inbox_defaults_and_recent_flag() -> None:
     assert pending.fields["状态"] == ["待处理"]
     assert pending.fields["数据来源"] == ["真实抓取"]
     assert pending.fields["近60天"] is True
-    assert pending.fields["收藏率"] == 0.25
+    assert pending.fields["发布周"] == "2026-W35"
+    assert "收藏率" not in pending.fields
 
 
 def test_account_update_preserves_controls_and_calculates_follower_gap() -> None:
@@ -113,4 +117,4 @@ def test_content_update_preserves_previous_metrics_and_calculates_gap() -> None:
     assert updated.fields["点赞增量"] == 80
     assert updated.fields["收藏增量"] == 25
     assert updated.fields["状态"] == ["已采用"]
-    assert updated.fields["爆款指数"] > 0
+    assert updated.fields["爆款指数"] == 355

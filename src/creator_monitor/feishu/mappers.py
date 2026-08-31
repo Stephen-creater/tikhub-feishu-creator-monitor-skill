@@ -26,8 +26,22 @@ def _digest(value: object) -> str:
     return hashlib.sha256(repr(value).encode("utf-8")).hexdigest()
 
 
+def _heat_score(*, likes: int | None, saves: int | None, comments: int | None) -> int:
+    return int(likes or 0) + 3 * int(saves or 0) + 2 * int(comments or 0)
+
+
+def _heat_grade(score: int) -> str:
+    if score >= 100_000:
+        return "S"
+    if score >= 20_000:
+        return "A"
+    if score >= 5_000:
+        return "B"
+    return "C"
+
+
 def account_pending(account: Account) -> PendingRecord:
-    digest = account.raw_hash or _digest(account.model_dump(mode="json"))
+    digest = _digest(account.model_dump(mode="json", exclude={"fetched_at"}))
     fields = _without_none(
         {
             "账号": account.nickname or account.account_id,
@@ -68,12 +82,8 @@ def prepare_account_update(pending: PendingRecord, existing: ExistingRecord) -> 
 
 
 def content_pending(content: Content, *, now: datetime) -> PendingRecord:
-    digest = content.raw_hash or _digest(content.model_dump(mode="json"))
-    save_rate = (
-        content.saves / content.likes
-        if content.saves is not None and content.likes not in (None, 0)
-        else 0
-    )
+    digest = _digest(content.model_dump(mode="json", exclude={"fetched_at"}))
+    heat_score = _heat_score(likes=content.likes, saves=content.saves, comments=content.comments)
     published = content.published_at
     published_aware = published if published.tzinfo else published.replace(tzinfo=UTC)
     now_aware = now if now.tzinfo else now.replace(tzinfo=UTC)
@@ -90,6 +100,7 @@ def content_pending(content: Content, *, now: datetime) -> PendingRecord:
             "封面原始链接": content.cover_url,
             "媒体原始链接": content.media_url,
             "发布时间": _date(content.published_at),
+            "发布周": published_aware.astimezone(SHANGHAI).strftime("%G-W%V"),
             "时长秒": content.duration_seconds,
             "播放数": content.views,
             "点赞数": content.likes,
@@ -101,9 +112,8 @@ def content_pending(content: Content, *, now: datetime) -> PendingRecord:
             "收藏增量": 0,
             "评论增量": 0,
             "分享增量": 0,
-            "收藏率": save_rate,
-            "爆款指数": 0,
-            "爆款等级": ["C"],
+            "爆款指数": heat_score,
+            "爆款等级": [_heat_grade(heat_score)],
             "近60天": (now_aware - published_aware).days <= 60,
             "状态": ["待处理"],
             "数据来源": ["真实抓取"],
@@ -124,31 +134,20 @@ def prepare_content_update(pending: PendingRecord, existing: ExistingRecord) -> 
         ("评论数", "旧评论数", "评论增量"),
         ("分享数", "旧分享数", "分享增量"),
     ]
-    deltas: dict[str, int] = {}
     for current_name, old_name, delta_name in pairs:
         previous = existing.fields.get(current_name)
         current = fields.get(current_name)
         if isinstance(previous, (int, float)) and isinstance(current, (int, float)):
             fields[old_name] = previous
             fields[delta_name] = int(current - previous)
-            deltas[delta_name] = int(current - previous)
 
-    index = (
-        deltas.get("点赞增量", 0)
-        + 3 * deltas.get("收藏增量", 0)
-        + 2 * deltas.get("评论增量", 0)
-        + 4 * deltas.get("分享增量", 0)
+    index = _heat_score(
+        likes=int(fields.get("点赞数") or 0),
+        saves=int(fields.get("收藏数") or 0),
+        comments=int(fields.get("评论数") or 0),
     )
     fields["爆款指数"] = index
-    if index >= 5000:
-        grade = "S"
-    elif index >= 1000:
-        grade = "A"
-    elif index >= 200:
-        grade = "B"
-    else:
-        grade = "C"
-    fields["爆款等级"] = [grade]
+    fields["爆款等级"] = [_heat_grade(index)]
 
     for control in (
         "状态",
@@ -170,7 +169,7 @@ def prepare_content_update(pending: PendingRecord, existing: ExistingRecord) -> 
 
 
 def comment_pending(comment: Comment) -> PendingRecord:
-    digest = comment.raw_hash or _digest(comment.model_dump(mode="json"))
+    digest = _digest(comment.model_dump(mode="json", exclude={"fetched_at"}))
     fields = _without_none(
         {
             "评论": comment.text[:80] or "评论",
