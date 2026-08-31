@@ -3,5 +3,5 @@
   "schema": "2.0",
   "header_template": "blue",
   "width_mode": "fill",
-  "blocks": ["kpi_column_set", "top_content_table", "run_note", "open_url_buttons"]
+  "blocks": ["account_content_kpis", "decision_kpis", "top_content_table", "action_note", "open_url_buttons"]
 }
