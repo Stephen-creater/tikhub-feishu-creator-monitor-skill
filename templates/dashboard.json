@@ -17,7 +17,7 @@
     {"name":"近60天发布趋势","type":"area","data_config":{"table_name":"内容库","count_all":true,"group_by":[{"field_name":"发布周","mode":"integrated","sort":{"type":"group","order":"asc"}}],"filter":{"conjunction":"and","conditions":[{"field_name":"近60天","operator":"is","value":true}]}}},
     {"name":"互动增长趋势","type":"line","data_config":{"table_name":"指标快照","series":[{"field_name":"点赞增量","rollup":"SUM"},{"field_name":"收藏增量","rollup":"SUM"},{"field_name":"评论增量","rollup":"SUM"}],"group_by":[{"field_name":"时间桶","mode":"integrated","sort":{"type":"group","order":"asc"}}]}},
     {"name":"爆款等级分布","type":"ring","data_config":{"table_name":"内容库","count_all":true,"group_by":[{"field_name":"爆款等级","mode":"integrated"}]}},
-    {"name":"选题处理情况","type":"funnel","data_config":{"table_name":"内容库","count_all":true,"group_by":[{"field_name":"状态","mode":"integrated"}]}},
+    {"name":"选题处理情况","type":"column","data_config":{"table_name":"内容库","count_all":true,"group_by":[{"field_name":"状态","mode":"integrated"}]}},
     {"name":"评论需求词云","type":"wordCloud","data_config":{"table_name":"评论库","count_all":true,"group_by":[{"field_name":"主题","mode":"integrated"}]}}
   ]
 }
